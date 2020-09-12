@@ -1,0 +1,5 @@
+clientes:200
+numMensajesCliente:10
+servidores:5
+numThreadServer:8
+buffer:3
