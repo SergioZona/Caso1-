@@ -9,8 +9,8 @@ import java.util.ArrayList;
  */
 public class Servidor extends Thread
 {
-	
-	
+
+
 	/**
 	 * Atributo con el máximo de mensajes que puede procesar el servidor.
 	 */
@@ -20,57 +20,65 @@ public class Servidor extends Thread
 	 * Atributo Buffer.
 	 */
 	private Buffer buffer;
-	
-	private ArrayList<Mensaje> mensajes;
-	
-	private int id;
-	
-	private boolean centinela;
-	
+
 	/**
-	 * Inicializa el servidor.
-	 * @param pMaxMensajes Cantidad maxima de mensajes que el servidor puede manejar.
-	 * @param pBuffer Referencia al buffer que contiene los mensajes.
+	 * Lista de mensajes del servidor.
+	 */
+	private ArrayList<Mensaje> mensajes;
+
+	/**
+	 * Id del servidor.
+	 */
+	private int idServidor;
+
+	/**
+	 * Inicializa los atributos del servidor y el arreglo de mensajes.
+	 * @param pId Id del servidor.
+	 * @param pMaxMensajes Máximo de mensajes posibles dentro del servidor.
+	 * @param pBuffer Buffer del cuál se reciben los mensajes que serán procesados.
 	 */
 	public Servidor(int pId, int pMaxMensajes, Buffer pBuffer)
 	{
-		id=pId;
+		idServidor=pId;
 		buffer=pBuffer;
 		maxMensajes=pMaxMensajes;
 		mensajes=new ArrayList<Mensaje>();
-		centinela=false;
 	}
-	
+
+	/**
+	 * Método que se encuentra sincronizado y escucha continuamente al Buffer para estar pendiente de la recepción de mensajes.
+	 */
 	public synchronized void run() 
 	{
 		while(mensajes.size()<=maxMensajes){
-			
-			Mensaje mensaje =buffer.retirar();
+			Mensaje mensaje = buffer.retirar();
 			if(mensaje==null)
 			{
 				notifyAll();
 			}
 			else
 			{
-				mensaje.setRespuesta("Respuesta completa.");
 				mensajes.add(mensaje);
+				mensaje.setRespuesta("Respuesta completa.");
 				if(maxMensajes==mensajes.size())
 				{
-					for(int i=0; i< mensajes.size();++i)
+					while(mensajes.isEmpty()==false)
 					{
 						Cliente cliente=mensajes.get(0).getCliente();
-						System.out.println("El servidor "+id+" respondió el mensaje "+mensajes.get(0).getNumMensaje()+" al cliente "+cliente.idCliente());
+						System.out.println("El servidor "+idServidor+" respondió el mensaje "+mensajes.get(0).getIdMensaje()+" al cliente "+cliente.idCliente());
 						mensajes.remove(0);					
-					}
+					}					
 				}
 			}			
-			try 
-			{
-				this.sleep(100);
-			} 
-			catch (InterruptedException e) {
-				
-			}
 		}
+
+		try 
+		{
+			this.sleep(1000);
+		} 
+		catch (InterruptedException e) {
+		}
+
+
 	}
 }

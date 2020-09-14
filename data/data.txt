@@ -1,5 +1,5 @@
-clientes:10
-numMensajesCliente:1
+clientes:3
+numMensajesCliente:100
 servidores:3
 numThreadServer:2
-buffer:10
+buffer:6

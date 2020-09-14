@@ -9,7 +9,6 @@ import java.util.ArrayList;
 /**
  * Clase que ejecuta el programa.
  * @author Kevin Steven Gamez Abril y Sergio Julian Zona Moreno. 
- *
  */
 public class Ejecutar {
 
@@ -25,30 +24,32 @@ public class Ejecutar {
 		System.out.println("Mensajes por cliente:"+ej.getNumMesajes());
 		System.out.println("Servidores::"+ej.getServidores());
 		System.out.println("Número threads servidores:"+ej.getNumThreadServer());
-		System.out.println("Tamaño del buffer:"+ej.getCliente());
-		
-		
+		System.out.println("Tamaño del buffer:"+ej.getBuffer());
+
+
 		//Asignación de tamaños.
 		Buffer buffer = new Buffer(ej.getBuffer());
-		
+
 		ArrayList<Cliente> clientes =new ArrayList<Cliente>();
 		ArrayList<Servidor> servidores =new ArrayList<Servidor>();
+
+		//Inicialización de las listas y los Threads.
 
 		for(int i=0; i<ej.getCliente(); ++i)
 		{
 			clientes.add(new Cliente(i,ej.getNumMesajes(), buffer));
 		}
-		
+
 		for(int i=0; i<ej.getServidores(); ++i)
 		{
 			servidores.add(new Servidor(i, ej.getNumThreadServer(), buffer));
 		}
-		
+
 		for(int i=0; i<ej.getCliente(); ++i)
 		{
 			clientes.get(i).start();
 		}
-		
+
 		for(int i=0; i<ej.getServidores(); ++i)
 		{
 			servidores.get(i).start();
@@ -60,10 +61,13 @@ public class Ejecutar {
 	 */
 	public Ejecutar()
 	{
-		try {
+		try 
+		{
 			lecturaArchivo();
-		} catch (IOException e) {
-			
+		} 
+		catch (IOException e) 
+		{
+
 		}
 	}
 
@@ -102,6 +106,7 @@ public class Ejecutar {
 		BufferedReader br = new BufferedReader(fr);
 		String siguiente = br.readLine();
 
+		//Inicializa los atributos con base en la lectura del archivo de texto.
 		while (siguiente != null) {
 			String arr[] = siguiente.split(":");
 			int numero = Integer.parseInt(arr[1]);
